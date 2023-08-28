@@ -7,6 +7,7 @@ namespace API.Infraestrutura
     {
         public DbSet<Employee> Employees { get; set; }
 
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql(
               "Server=localhost;" +

@@ -17,9 +17,13 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(EmployeeViewModel employeeViewModel)
+        public IActionResult Add([FromForm] EmployeeViewModel employeeViewModel)
         {
-            var employ = new Employee(employeeViewModel.Name, employeeViewModel.Age, null);
+            var filePath = Path.Combine("Storage", employeeViewModel.Photo.FileName);
+            using Stream fileStream = new FileStream(filePath, FileMode.Create);
+            employeeViewModel.Photo.CopyTo(fileStream);
+
+            var employ = new Employee(employeeViewModel.Name, employeeViewModel.Age, filePath);
             _employeeRepository.Add(employ);
 
             return Ok();
@@ -30,6 +34,34 @@ namespace API.Controllers
         {
             var employss = _employeeRepository.Get();
             return Ok(employss);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult FindById(int id)
+        {
+            var employee = _employeeRepository.FindById(id);
+            return Ok(employee);
+        }
+
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            _employeeRepository.Delete(id);
+            return Ok();
+        }
+
+
+
+        [HttpPost]
+        [Route("{id}/dowload")]
+        public IActionResult DowloadPhoto(int id)
+        {
+            var employee = _employeeRepository.FindById(id);
+            var dataBytes = System.IO.File.ReadAllBytes(employee.photo);
+
+            return File(dataBytes, "image/png");
         }
     
     }

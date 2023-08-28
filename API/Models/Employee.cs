@@ -10,7 +10,7 @@ namespace API.Models
         public int id { get; set; }
         public string name { get; set; }
         public int age { get; set; }
-        public string photo { get; set; }
+        public string? photo { get; set; }
 
         public Employee(string name, int age, string photo)
         {

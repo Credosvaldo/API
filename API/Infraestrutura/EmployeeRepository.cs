@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using System.Runtime.InteropServices;
 
 namespace API.Infraestrutura
 {
@@ -12,9 +13,22 @@ namespace API.Infraestrutura
             _contex.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            Employee e = FindById(id);
+            _contex.Employees.Remove(e);
+            _contex.SaveChanges();
+        }
+
         public List<Employee> Get()
         {
             return _contex.Employees.ToList();
         }
+
+        public Employee? FindById(int id)
+        {
+            return _contex.Employees.Find(id);
+        }
+
     }
 }
